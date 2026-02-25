@@ -27,28 +27,23 @@ export class ProfilesController {
   //Get /profiles/:id
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return { id };
+    return this.profilesService.findById(id);
   }
 
   //POST /profiles
   @Post()
   create(@Body() createProfileDto: CreateProfileDto) {
-    return {
-      name: createProfileDto.name,
-      description: createProfileDto.description,
-    };
+    return this.profilesService.create(createProfileDto);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return {
-      id,
-      name: updateProfileDto.name,
-      description: updateProfileDto.description,
-    };
+    return this.profilesService.update(id, updateProfileDto);
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {}
+  @HttpCode(HttpStatus.OK)
+  remove(@Param('id') id: string) {
+    return this.profilesService.delete(id);
+  }
 }

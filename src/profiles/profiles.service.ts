@@ -7,27 +7,53 @@ export class ProfilesService {
     {
       id: randomUUID(),
       name: 'John Doe',
-      email: 'john.doe@example.com',
-      age: 30,
       description: 'Software Engineer',
     },
     {
       id: randomUUID(),
       name: 'Jane Doe',
-      email: 'jane.doe@example.com',
-      age: 25,
       description: 'Data Scientist',
     },
     {
       id: randomUUID(),
       name: 'Alice Smith',
-      email: 'alice.smith@example.com',
-      age: 28,
       description: 'UX Designer',
     },
   ];
 
   findAll() {
     return this.profiles;
+  }
+
+  findById(id: string) {
+    return this.profiles.find((profile) => profile.id === id);
+  }
+
+  create(profile: { name: string; description: string }) {
+    const newProfile = {
+      id: randomUUID(),
+      ...profile,
+    };
+    this.profiles.push(newProfile);
+    return newProfile;
+  }
+
+  update(id: string, profile: { name: string; description: string }) {
+    const _index = this.profiles.findIndex((profile) => profile.id == id);
+    if (_index == -1) return {};
+
+    this.profiles[_index] = {
+      ...this.profiles[_index],
+      ...profile,
+    };
+    return this.profiles[_index];
+  }
+
+  delete(id: string) {
+    const _index = this.profiles.findIndex((profile) => profile.id == id);
+    if (_index == -1) return 'Profile not found';
+
+    this.profiles.splice(_index, 1);
+    return 'Profile was deleted';
   }
 }
