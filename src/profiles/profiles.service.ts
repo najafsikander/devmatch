@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
 @Injectable()
@@ -26,7 +26,9 @@ export class ProfilesService {
   }
 
   findById(id: string) {
-    return this.profiles.find((profile) => profile.id === id);
+    const matchingProfile = this.profiles.find((profile) => profile.id === id);
+    if (!matchingProfile) throw new Error(`Profile with ID ${id} not found`);
+    return matchingProfile;
   }
 
   create(profile: { name: string; description: string }) {
@@ -40,7 +42,8 @@ export class ProfilesService {
 
   update(id: string, profile: { name: string; description: string }) {
     const _index = this.profiles.findIndex((profile) => profile.id == id);
-    if (_index == -1) return {};
+    if (_index == -1)
+      throw new NotFoundException(`Profile with ID ${id} not found`);
 
     this.profiles[_index] = {
       ...this.profiles[_index],
@@ -51,7 +54,8 @@ export class ProfilesService {
 
   delete(id: string) {
     const _index = this.profiles.findIndex((profile) => profile.id == id);
-    if (_index == -1) return 'Profile not found';
+    if (_index == -1)
+      throw new NotFoundException(`Profile with ID ${id} not found`);
 
     this.profiles.splice(_index, 1);
     return 'Profile was deleted';
